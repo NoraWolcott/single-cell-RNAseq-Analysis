@@ -18,6 +18,7 @@ single-cell-RNAseq-Analysis/
 │   ├── __init__.py
 │   ├── io.py
 │   ├── preprocessing.py
+│   ├── dim_reduction.py
 │   ├── expression.py
 │   ├── scoring.py
 │   ├── gep.py
