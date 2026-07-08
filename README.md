@@ -12,21 +12,20 @@ This repository contains analysis tools compiled for MOE scRNA-seq.
 single-cell-RNAseq-Analysis/
 │
 ├── notebooks/
-│   └── singleCellAnalysis_masterNotebook.ipynb          # Main analysis workflow
+│   └── singleCellAnalysis_masterNotebook.ipynb
 │
 ├── src/
-│   ├── io.py                                            # Data loading
-│   ├── preprocessing.py                                 # Filtering and preprocessing
-│   ├── expression.py                                    # Gene expression analyses
-│   ├── scoring.py                                       # Cell-type annotation
-│   ├── gep.py                                           # Gene expression program analysis
-│   └── plotting.py                                      # Visualization
+│   ├── __init__.py
+│   ├── io.py
+│   ├── preprocessing.py
+│   ├── expression.py
+│   ├── scoring.py
+│   ├── gep.py
+│   └── plotting.py
 │
-├── data/                                                # Input data (not included)
-│
-├── results/                                             # Generated figures and data
-│
-├── requirements.txt                                     # Dependencies
+├── data/
+├── results/
+├── requirements.txt
 └── README.md
 ```
 
