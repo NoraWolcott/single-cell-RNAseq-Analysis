@@ -41,8 +41,8 @@ cd single-cell-RNAseq-Analysis
 Create a Python environment:
 
 ```bash
-conda create -n mosn_analysis python=3.11
-conda activate mosn_analysis
+conda create -n scrna_analysis python=3.11
+conda activate scrna_analysis
 ```
 
 Install dependencies:
