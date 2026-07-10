@@ -1,21 +1,12 @@
 import scanpy as sc
 
 
-def run_pca(adata, n_comps=None):
+def run_pca(
+    adata,
+    n_comps=None
+):
     """
-    Perform PCA.
-
-    Parameters
-    ----------
-    adata : AnnData
-        Annotated single-cell dataset.
-    n_comps : int, optional
-        Number of principal components to compute.
-
-    Returns
-    -------
-    AnnData
-        AnnData object with PCA results stored.
+    Perform PCA using highly variable genes.
     """
 
     sc.tl.pca(
@@ -27,14 +18,6 @@ def run_pca(adata, n_comps=None):
     return adata
 
 
-def get_pca_variance(adata):
-    """
-    Calculate variance explained by each PC.
-    """
-
-    return adata.uns["pca"]["variance_ratio"]
-
-
 def run_umap(
     adata,
     n_neighbors=15,
@@ -42,20 +25,6 @@ def run_umap(
 ):
     """
     Compute neighborhood graph and UMAP embedding.
-
-    Parameters
-    ----------
-    adata : AnnData
-        Annotated single-cell dataset.
-    n_neighbors : int
-        Number of neighbors for graph construction.
-    n_pcs : int
-        Number of PCs used for neighborhood graph.
-
-    Returns
-    -------
-    AnnData
-        AnnData object with neighbors and UMAP results.
     """
 
     sc.pp.neighbors(
@@ -75,23 +44,47 @@ def leiden_clustering(
 ):
     """
     Perform Leiden clustering.
-
-    Parameters
-    ----------
-    adata : AnnData
-        Annotated single-cell dataset.
-    resolution : float
-        Leiden clustering resolution parameter.
-
-    Returns
-    -------
-    AnnData
-        AnnData object with Leiden clusters.
     """
 
     sc.tl.leiden(
         adata,
         resolution=resolution
     )
+
+    return adata
+
+def run_dimensionality_reduction(
+    adata,
+    n_top_genes=2000,
+    n_pcs=20,
+    leiden_resolution=None
+):
+    """
+    Run HVG selection, PCA, neighborhood graph, UMAP,
+    and optionally Leiden clustering.
+    """
+
+    sc.pp.highly_variable_genes(
+        adata,
+        n_top_genes=n_top_genes
+    )
+
+    sc.tl.pca(
+        adata,
+        use_highly_variable=True
+    )
+
+    sc.pp.neighbors(
+        adata,
+        n_pcs=n_pcs
+    )
+
+    sc.tl.umap(adata)
+
+    if leiden_resolution is not None:
+        sc.tl.leiden(
+            adata,
+            resolution=leiden_resolution
+        )
 
     return adata

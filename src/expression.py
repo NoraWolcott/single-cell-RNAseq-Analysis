@@ -1,5 +1,7 @@
 import numpy as np
 import scanpy as sc
+import pandas as pd
+import os
 
 
 def rank_cluster_markers(
@@ -9,20 +11,6 @@ def rank_cluster_markers(
 ):
     """
     Identify marker genes for each cluster.
-
-    Parameters
-    ----------
-    adata : AnnData
-        Annotated single-cell dataset.
-    groupby : str
-        Metadata column defining groups.
-    method : str
-        Statistical test used for ranking genes.
-
-    Returns
-    -------
-    AnnData
-        AnnData object with rank_genes_groups results stored.
     """
 
     sc.tl.rank_genes_groups(
@@ -40,11 +28,6 @@ def get_top_marker_genes(
 ):
     """
     Extract top-ranked marker genes from each group.
-
-    Returns
-    -------
-    dict
-        Dictionary mapping groups to top marker genes.
     """
 
     ranked_genes = adata.uns["rank_genes_groups"]["names"]
@@ -66,20 +49,6 @@ def calculate_gene_counts(
 ):
     """
     Calculate total expression counts for selected genes per cell.
-
-    Parameters
-    ----------
-    adata : AnnData
-        Annotated single-cell dataset.
-    genes : list
-        Genes to summarize.
-    layer : str
-        AnnData layer containing counts.
-
-    Returns
-    -------
-    array
-        Total counts per cell.
     """
 
     counts = np.asarray(
@@ -87,3 +56,29 @@ def calculate_gene_counts(
     ).flatten()
 
     return counts
+
+
+def save_top_genes_csv(
+    top_genes,
+    filename="top_DE_genes.csv",
+    results_dir="../results"
+):
+    """
+    Save top ranked genes for each group to CSV.
+    """
+
+    os.makedirs(results_dir, exist_ok=True)
+
+    gene_table = pd.DataFrame(top_genes)
+
+    filepath = os.path.join(
+        results_dir,
+        filename
+    )
+
+    gene_table.to_csv(
+        filepath,
+        index_label="rank"
+    )
+
+    return filepath
