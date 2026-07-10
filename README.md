@@ -21,6 +21,7 @@ single-cell-RNAseq-Analysis/
 │   ├── dim_reduction.py
 │   ├── expression.py
 │   ├── scoring.py
+│   ├── markers.py
 │   ├── gep.py
 │   └── plotting.py
 │
