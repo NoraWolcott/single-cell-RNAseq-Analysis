@@ -1,4 +1,5 @@
 import scanpy as sc
+import numpy as np
 
 
 def store_raw_counts(adata):
@@ -11,13 +12,42 @@ def store_raw_counts(adata):
 
 def normalize_data(adata, target_sum=1e4):
     """
-    Normalize counts and log transform.
+    Calculate basic QC metrics if not already present, then normalize
+    counts and log transform.
     """
+
+    # Calculate total counts if not already present
+    if "total_counts" not in adata.obs.columns:
+        adata.obs["total_counts"] = np.asarray(
+            adata.X.sum(axis=1)
+        ).flatten()
+
+    # Calculate number of genes detected per cell if not already present
+    if "n_genes_by_counts" not in adata.obs.columns:
+        adata.obs["n_genes_by_counts"] = np.asarray(
+            (adata.X > 0).sum(axis=1)
+        ).flatten()
+
+    # Calculate mitochondrial percentage if not already present
+    if "pct_counts_mito" not in adata.obs.columns:
+
+        mito_genes = adata.var_names.str.startswith("mt-")
+
+        mito_counts = np.asarray(
+            adata[:, mito_genes].X.sum(axis=1)
+        ).flatten()
+
+        adata.obs["pct_counts_mito"] = (
+            mito_counts / adata.obs["total_counts"] * 100
+        )
+
+    # Normalize counts
     sc.pp.normalize_total(
         adata,
         target_sum=target_sum
     )
 
+    # Log transform
     sc.pp.log1p(adata)
 
     return adata

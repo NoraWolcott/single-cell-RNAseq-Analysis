@@ -15,7 +15,9 @@ def run_pca(
         n_comps=n_comps
     )
 
-    return adata
+    variance = adata.uns["pca"]["variance_ratio"]
+
+    return adata, variance
 
 
 def run_umap(
