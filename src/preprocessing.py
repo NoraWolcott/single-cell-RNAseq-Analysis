@@ -140,7 +140,7 @@ def normalize_and_select_hvgs(
         ]
 
     # Store raw counts
-    adata.layers["counts"] = adata.X.copy()
+    #adata.layers["counts"] = adata.X.copy()
 
     # Normalize and log transform
     sc.pp.normalize_total(
